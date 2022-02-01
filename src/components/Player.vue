@@ -5,7 +5,11 @@
             <!-- <div class="player-header-user">這裡放頭像</div> -->
         </div>
 
-        <div class="player-search">
+        <player-search
+            :search-team="onSearchTeam"
+            :search-name="onSearchName"
+            ></player-search>
+        <!-- <div class="player-search">
             <div class="player-search-input"> 
                 <b-form inline>
                     <label class="mr-sm-2" for="inline-form-custom-select">Team</label>
@@ -29,10 +33,7 @@
                     ></b-form-input>
                 </b-form>
             </div>
-            <!-- <div class="player-search-btn"> 
-                <b-button variant="primary">search</b-button>
-            </div> -->
-        </div>
+        </div> -->
 
         <div class="player-list">
             <b-table 
@@ -102,8 +103,10 @@
 
 <script>
 import players from '../assets/players.json'
+import PlayerSearch from './PlayerSearch.vue'
 
 export default {
+    components: { PlayerSearch },
     data() {
         return {
             fields: [
@@ -145,10 +148,6 @@ export default {
                 ],
             players: [],
             detail: [],
-            search: {
-                team: '',
-                keyword: '',
-            },
             perPage: 10,
             currentPage: 1,
             showDetail: false,
@@ -166,6 +165,16 @@ export default {
         getPlayers() {
             this.players = players
         },
+        onSearchTeam(team) { // value是組件傳來的值 搜尋隊名
+            const searchTeam = team
+                this.players = players.filter(item => 
+                    item.team_acronym === searchTeam)
+        },
+        onSearchName(name) { // value是組件傳來的值 搜尋隊名
+            const searchNeam = name
+                this.players = players.filter(item => 
+                    item.name === searchNeam)
+        },
         onSearch() {
             const searchTeam = this.search.team
             const searchNeam = this.search.keyword
@@ -180,10 +189,8 @@ export default {
             }
         },
         getPlayerDetail(player) {
-            console.log(player);
             this.detail = player
             this.showDetail = true
-            console.log(this.detail);
         },
         closePopup() {
             this.showDetail = false
